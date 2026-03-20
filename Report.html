@@ -348,17 +348,22 @@
           <button class="access-button">📋 เข้าดูข้อมูล</button>
         </div>
 
-        <div class="data-card scrap" onclick="selectDataType('lpg')">
-          <div class="card-header">
-            <div class="card-icon">🔥</div>
-            <h2 class="card-title">Aluminium & LPG D05 Data</h2>
-          </div>
-          <p class="card-description">ข้อมูลการใช้ LPG / kg Ingot</p>
-          <div class="card-stats">
+        <div class="data-card scrap" onclick="openLink('https://docs.google.com/spreadsheets/d/XXXXXXXX')">
+            <div class="card-header">
+                <div class="card-icon">🔥</div>
+                <h2 class="card-title">Aluminium & LPG D05 Data</h2>
+        </div>
+        <p class="card-description">ข้อมูลการใช้ LPG / kg Ingot</p>
+
+        <div class="card-stats">
             <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">ติดตาม</span></div>
             <div class="stat-item"><span class="stat-number">Real-time</span><span class="stat-label">อัพเดท</span></div>
-          </div>
-          <button class="access-button">📋 เข้าดูข้อมูล</button>
+        </div>
+
+        <button class="access-button"
+            onclick="event.stopPropagation(); openLink(https://docs.google.com/spreadsheets/d/1JMD0a5nLaEobqBvK7gBtElEDxDtH1ZX5/edit?usp=drive_link&ouid=103243829117381280273&rtpof=true&sd=true)">
+            📋 ดาวน์โหลดข้อมูล
+        </button>
         </div>
       </div>
     </div>
@@ -507,6 +512,8 @@
         description: 'ข้อมูล Air Compressor ปี 2027<br>กำลังเตรียมข้อมูล', available: false, months: {}
       }
     };
+
+    
 
     //Auto-enable current month 
     function autoEnableCurrentMonth() {

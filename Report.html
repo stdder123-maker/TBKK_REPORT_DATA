@@ -361,8 +361,8 @@
         </div>
 
         <button class="access-button"
-            onclick="event.stopPropagation(); openLink(https://docs.google.com/spreadsheets/d/1JMD0a5nLaEobqBvK7gBtElEDxDtH1ZX5/edit?usp=drive_link&ouid=103243829117381280273&rtpof=true&sd=true)">
-            📋 ดาวน์โหลดข้อมูล
+          onclick="event.stopPropagation(); openLink('https://docs.google.com/spreadsheets/d/1JMD0a5nLaEobqBvK7gBtElEDxDtH1ZX5/edit?usp=drive_link&ouid=103243829117381280273&rtpof=true&sd=true')">
+          📋 ดาวน์โหลดข้อมูล
         </button>
         </div>
       </div>
@@ -729,6 +729,14 @@
       p.style.animationDelay  = Math.random() * 8 + 's';
       document.getElementById('particleContainer').appendChild(p);
       setTimeout(() => p.remove(), 8000);
+    }
+
+    function openLink(url) {
+      if (!url || url === '#') {
+        alert('❌ ยังไม่มีลิงก์');
+        return;
+      }
+      window.open(url, '_blank');
     }
 
     // Init 

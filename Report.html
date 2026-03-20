@@ -1,1 +1,737 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#001133">
+  <title>⚡ONLINE DATA⚡</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: #001133;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    @supports (min-height: 100dvh) {
+      body { min-height: 100dvh; }
+      .container { min-height: 100dvh; }
+    }
+    @supports (height: 100dvh) {
+      .bg-animated { height: 100dvh; }
+    }
+
+    .bg-animated {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -3;
+      background: linear-gradient(45deg, #0a0a0a, #001133, #002244, #003366, #004488, #0055aa);
+      background-size: 600% 600%;
+      animation: quantumFlow 12s ease infinite;
+      transform: translateZ(0);
+    }
+
+    @keyframes quantumFlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .cyber-grid {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image:
+        linear-gradient(rgba(0, 170, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 170, 255, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridPulse 4s ease-in-out infinite;
+      z-index: -2;
+      pointer-events: none;
+    }
+    @keyframes gridPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+
+    .quantum-particles { position: fixed; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+    .particle {
+      position: absolute; width: 4px; height: 4px;
+      background: linear-gradient(45deg, #00aaff, #0088ff, #0066ff);
+      border-radius: 50%;
+      animation: quantumFloat 8s linear infinite;
+      box-shadow: 0 0 20px rgba(0, 170, 255, 0.8);
+    }
+    @keyframes quantumFloat {
+      0%   { transform: translate(0, 0) scale(0.8); opacity: 0; }
+      20%  { transform: translate(50px, -30px) scale(1.2); opacity: 1; }
+      50%  { transform: translate(-30px, 40px) scale(1); opacity: 0.8; }
+      80%  { transform: translate(40px, -20px) scale(1.1); opacity: 0.6; }
+      100% { transform: translate(0, 0) scale(0.8); opacity: 0; }
+    }
+
+    .container {
+      position: relative; z-index: 2; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; padding: 40px 20px;
+    }
+
+    .header { text-align: center; margin-bottom: 60px; padding: 40px 0; }
+    .main-title {
+      font-family: 'Orbitron', monospace; font-size: 4rem; font-weight: 900; color: #00aaff;
+      text-shadow: 0 0 20px rgba(0,170,255,0.8), 0 0 40px rgba(0,170,255,0.6), 0 0 60px rgba(0,170,255,0.4);
+      margin-bottom: 20px; animation: hologramGlow 3s ease-in-out infinite; letter-spacing: 3px;
+    }
+    @keyframes hologramGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(0,170,255,0.8), 0 0 40px rgba(0,170,255,0.6), 0 0 60px rgba(0,170,255,0.4); }
+      50%       { text-shadow: 0 0 30px rgba(0,170,255,1),   0 0 60px rgba(0,170,255,0.8), 0 0 90px rgba(0,170,255,0.6); }
+    }
+
+    .subtitle { font-size: 1.8rem; color: #66ccff; font-weight: 500; margin-bottom: 30px; opacity: 0.9; text-shadow: 0 0 15px rgba(102,204,255,0.5); }
+    .status-indicator {
+      display: inline-flex; align-items: center;
+      background: rgba(0,170,255,0.1); border: 2px solid rgba(0,170,255,0.3);
+      border-radius: 50px; padding: 12px 25px; font-size: 1.2rem; color: #00aaff;
+      backdrop-filter: blur(10px); animation: statusPulse 2s ease-in-out infinite;
+    }
+    @keyframes statusPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,170,255,0.3); border-color: rgba(0,170,255,0.3); }
+      50%       { box-shadow: 0 0 40px rgba(0,170,255,0.6); border-color: rgba(0,170,255,0.6); }
+    }
+    .status-dot {
+      width: 12px; height: 12px; background: #00ff88; border-radius: 50%; margin-right: 10px;
+      animation: dotBlink 1.5s ease-in-out infinite; box-shadow: 0 0 15px rgba(0,255,136,0.8);
+    }
+    @keyframes dotBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .nav-breadcrumb {
+      margin-bottom: 40px; display: flex; align-items: center; gap: 15px;
+      font-size: 1.2rem; color: #66ccff; flex-wrap: wrap; justify-content: center;
+    }
+    .nav-link {
+      color: #00aaff; text-decoration: none; padding: 8px 16px; border-radius: 20px;
+      background: rgba(0,170,255,0.1); border: 1px solid rgba(0,170,255,0.3);
+      transition: all 0.3s ease; cursor: pointer; white-space: nowrap;
+    }
+    .nav-link:hover { background: rgba(0,170,255,0.2); border-color: rgba(0,170,255,0.5); transform: translateY(-2px); }
+    .nav-link.active { background: rgba(0,170,255,0.3); border-color: rgba(0,170,255,0.6); }
+    .nav-separator { color: #66ccff; opacity: 0.6; }
+
+    .back-button {
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: white; border: none; padding: 10px 20px; border-radius: 25px;
+      cursor: pointer; font-size: 1rem; margin-right: 20px;
+      transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(255,107,53,0.3);
+    }
+    .back-button:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(255,107,53,0.4); }
+
+    .main-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px; max-width: 1400px; width: 100%; margin: 0 auto;
+    }
+
+    .data-card, .year-card, .month-card {
+      background: rgba(0,170,255,0.05); border: 2px solid rgba(0,170,255,0.2);
+      border-radius: 25px; padding: 40px 30px; text-align: center;
+      backdrop-filter: blur(20px); transition: all 0.4s ease;
+      position: relative; overflow: hidden;
+      transform: perspective(1000px) rotateX(0deg); cursor: pointer;
+    }
+    .data-card.unavailable, .year-card.unavailable, .month-card.unavailable {
+      background: rgba(100,100,100,0.05); border: 2px solid rgba(100,100,100,0.2);
+      opacity: 0.6; cursor: default;
+    }
+
+    /* Scrap card */
+    .data-card.scrap { border-color: rgba(255,165,0,0.2); background: rgba(255,165,0,0.05); }
+    .data-card.scrap:hover { border-color: rgba(255,165,0,0.6); box-shadow: 0 25px 50px rgba(255,165,0,0.2), 0 0 50px rgba(255,165,0,0.1); }
+    .data-card.scrap .card-title { color: #ffa500; text-shadow: 0 0 15px rgba(255,165,0,0.5); }
+    .data-card.scrap .card-description, .data-card.scrap .stat-number { color: #ffcc66; }
+    .data-card.scrap .access-button { background: linear-gradient(135deg, #ff8c00, #ffa500, #ffb84d, #ffd700); }
+
+    /* Air Compressor card */
+    .data-card.aircomp { border-color: rgba(0,255,127,0.2); background: rgba(0,255,127,0.05); }
+    .data-card.aircomp:hover { border-color: rgba(0,255,127,0.6); box-shadow: 0 25px 50px rgba(0,255,127,0.2), 0 0 50px rgba(0,255,127,0.1); }
+    .data-card.aircomp .card-title { color: #00ff7f; text-shadow: 0 0 15px rgba(0,255,127,0.5); }
+    .data-card.aircomp .card-description, .data-card.aircomp .stat-number { color: #7fffd4; }
+    .data-card.aircomp .access-button { background: linear-gradient(135deg, #00c853, #00e676, #69f0ae, #b2ff59); }
+
+    /* Scan line shimmer — แยก color ตาม type */
+    .data-card::before, .year-card::before, .month-card::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(0,170,255,0.1), transparent);
+      transform: rotate(45deg); transition: all 0.6s ease; opacity: 0;
+    }
+    .data-card.scrap::before   { background: linear-gradient(45deg, transparent, rgba(255,165,0,0.1), transparent); }
+    .data-card.aircomp::before { background: linear-gradient(45deg, transparent, rgba(0,255,127,0.1), transparent); }
+
+    .data-card:not(.unavailable):hover::before,
+    .year-card:not(.unavailable):hover::before,
+    .month-card:not(.unavailable):hover::before {
+      animation: scanLine 2s linear infinite; opacity: 1;
+    }
+    @keyframes scanLine {
+      0%   { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%)  translateY(100%)  rotate(45deg); }
+    }
+
+    .data-card:not(.unavailable):hover,
+    .year-card:not(.unavailable):hover,
+    .month-card:not(.unavailable):hover {
+      transform: perspective(1000px) rotateX(5deg) translateY(-15px);
+      box-shadow: 0 25px 50px rgba(0,170,255,0.2), 0 0 50px rgba(0,170,255,0.1);
+    }
+
+    .card-header { display: flex; align-items: center; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
+    .card-icon { font-size: 3.5rem; margin-right: 15px; animation: iconFloat 3s ease-in-out infinite; }
+    .unavailable .card-icon { animation: none; opacity: 0.5; }
+    @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    .card-title {
+      font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 700;
+      color: #00aaff; text-shadow: 0 0 15px rgba(0,170,255,0.5);
+    }
+    .unavailable .card-title { color: #888; text-shadow: none; }
+
+    .card-description { font-size: 1.3rem; color: #66ccff; margin-bottom: 20px; line-height: 1.6; opacity: 0.9; }
+    .unavailable .card-description { color: #888; opacity: 0.7; }
+
+    .card-stats {
+      display: flex; justify-content: space-around; margin: 20px 0; padding: 15px 0; flex-wrap: wrap; gap: 10px;
+      border-top: 1px solid rgba(0,170,255,0.2); border-bottom: 1px solid rgba(0,170,255,0.2);
+    }
+    .stat-item { text-align: center; min-width: 80px; }
+    .stat-number { font-size: 1.8rem; font-weight: 700; color: #00aaff; display: block; }
+    .stat-label  { font-size: 0.9rem; color: #66ccff; opacity: 0.8; }
+
+    .access-button, .download-button {
+      background: linear-gradient(135deg, #0044aa, #0066cc, #0088ff, #00aaff);
+      background-size: 300% 300%; animation: buttonFlow 4s ease infinite;
+      color: white; border: 2px solid rgba(0,170,255,0.3); padding: 18px 40px;
+      font-size: 1.4rem; font-weight: 600; border-radius: 50px; cursor: pointer;
+      transition: all 0.3s ease; box-shadow: 0 15px 30px rgba(0,170,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      font-family: 'Rajdhani', sans-serif; position: relative; overflow: hidden;
+      min-width: 200px; margin-top: 10px;
+    }
+    .access-button.unavailable, .download-button.unavailable {
+      background: linear-gradient(135deg, #444, #666, #888); animation: none; cursor: not-allowed;
+      box-shadow: 0 15px 30px rgba(100,100,100,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+      border: 2px solid rgba(100,100,100,0.3);
+    }
+    @keyframes buttonFlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .access-button:not(.unavailable):hover,
+    .download-button:not(.unavailable):hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 25px 50px rgba(0,170,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+      border-color: rgba(0,170,255,0.6);
+    }
+
+    .file-size   { font-size: 1.1rem; color: #88ddff; margin-top: 10px; opacity: 0.8; }
+    .coming-soon { font-size: 1.1rem; color: #ff8888; margin-top: 15px; opacity: 0.8; font-weight: 600; }
+
+    .progress-container {
+      width: 100%; height: 4px; background: rgba(0,170,255,0.2);
+      border-radius: 2px; margin-top: 20px; overflow: hidden; display: none;
+    }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, #00aaff, #0088ff); border-radius: 2px; transition: width 0.3s ease; width: 0%; }
+
+    .view { display: none; width: 100%; }
+    .view.active { display: block; }
+
+    .footer {
+      margin-top: 80px; text-align: center; padding: 30px 0;
+      border-top: 1px solid rgba(0,170,255,0.2); width: 100%;
+    }
+    .footer-text { color: #66ccff; font-size: 1.2rem; opacity: 0.8; }
+
+    .mobile-notice {
+      display: none;
+      background: rgba(255,136,0,0.1); border: 2px solid rgba(255,136,0,0.3);
+      border-radius: 15px; padding: 15px; margin: 10px 0;
+      color: #ffaa44; font-size: 0.9rem; text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .main-title  { font-size: 2.5rem; letter-spacing: 2px; }
+      .subtitle    { font-size: 1.4rem; }
+      .main-grid   { grid-template-columns: 1fr; gap: 30px; }
+      .data-card, .year-card, .month-card { padding: 30px 20px; }
+      .card-title  { font-size: 1.6rem; }
+      .card-description { font-size: 1.1rem; }
+      .access-button, .download-button { padding: 16px 30px; font-size: 1.2rem; min-width: 180px; }
+      .mobile-notice { display: block; }
+      .nav-breadcrumb { flex-direction: column; gap: 10px; }
+    }
+    @media (max-width: 480px) {
+      .main-title  { font-size: 2rem; letter-spacing: 1px; }
+      .subtitle    { font-size: 1.2rem; }
+      .status-indicator { font-size: 1rem; padding: 10px 20px; }
+      .data-card, .year-card, .month-card { padding: 25px 15px; margin: 0 10px; }
+      .card-icon   { font-size: 2.5rem; margin-right: 10px; }
+      .card-title  { font-size: 1.4rem; }
+      .access-button, .download-button { padding: 14px 25px; font-size: 1.1rem; min-width: 160px; }
+      .card-stats  { flex-direction: column; gap: 15px; }
+      .stat-item   { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animated"></div>
+  <div class="cyber-grid"></div>
+  <div class="quantum-particles" id="particleContainer"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="main-title">⚡ ONLINE DATA ⚡</h1>
+      <p class="subtitle" id="mainSubtitle">ระบบรายงานข้อมูล - Power Meter • Scrap • Air Compressor</p>
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span id="statusText">ONLINE SYSTEM</span>
+      </div>
+    </div>
+
+    <div class="nav-breadcrumb" id="breadcrumb">
+      <button class="back-button" onclick="goBack()" id="backButton" style="display:none;">← กลับ</button>
+      <a class="nav-link active" onclick="navigateTo('homeView')" id="homeNav">หน้าแรก</a>
+      <span class="nav-separator" id="sep1" style="display:none;">›</span>
+      <a class="nav-link" onclick="navigateTo('yearlyView')" id="yearNav" style="display:none;">เลือกปี</a>
+      <span class="nav-separator" id="sep2" style="display:none;">›</span>
+      <a class="nav-link" onclick="navigateTo('monthlyView')" id="monthNav" style="display:none;">เลือกเดือน</a>
+    </div>
+
+    <!-- หน้าแรก -->
+    <div id="homeView" class="view active">
+      <div class="main-grid">
+        <div class="data-card" onclick="selectDataType('powermeter')">
+          <div class="card-header">
+            <div class="card-icon">⚡</div>
+            <h2 class="card-title">Power Meter</h2>
+          </div>
+          <p class="card-description">ข้อมูลการใช้พลังงานไฟฟ้า</p>
+          <div class="card-stats">
+            <div class="stat-item"><span class="stat-number">91%</span><span class="stat-label">ติดตาม</span></div>
+            <div class="stat-item"><span class="stat-number">Daily</span><span class="stat-label">ข้อมูล</span></div>
+          </div>
+          <button class="access-button">📋 เข้าดูข้อมูล</button>
+        </div>
+
+        <div class="data-card scrap" onclick="selectDataType('scrap')">
+          <div class="card-header">
+            <div class="card-icon">♻️</div>
+            <h2 class="card-title">Scrap Data</h2>
+          </div>
+          <p class="card-description">ข้อมูลการชั่งน้ำหนัก Scrap</p>
+          <div class="card-stats">
+            <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">ติดตาม</span></div>
+            <div class="stat-item"><span class="stat-number">Real-time</span><span class="stat-label">อัพเดท</span></div>
+          </div>
+          <button class="access-button">📋 เข้าดูข้อมูล</button>
+        </div>
+
+        <div class="data-card aircomp" onclick="selectDataType('aircompressor')">
+          <div class="card-header">
+            <div class="card-icon">💨</div>
+            <h2 class="card-title">Air Compressor</h2>
+          </div>
+          <p class="card-description">ข้อมูล Flow & Pressure ระบบลม</p>
+          <div class="card-stats">
+            <div class="stat-item"><span class="stat-number">5 Rooms</span><span class="stat-label">ติดตาม</span></div>
+            <div class="stat-item"><span class="stat-number">Real-time</span><span class="stat-label">สถานะ</span></div>
+          </div>
+          <button class="access-button">📋 เข้าดูข้อมูล</button>
+        </div>
+
+         <div class="data-card scrap" onclick="selectDataType('scrap')">
+          <div class="card-header">
+            <div class="card-icon">♻️</div>
+            <h2 class="card-title">Aluminuim & LPG D05 Data</h2>
+          </div>
+          <p class="card-description">ข้อมูลการใช้ PLG/kG_Ingot/p>
+          <div class="card-stats">
+            <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">ติดตาม</span></div>
+            <div class="stat-item"><span class="stat-number">Real-time</span><span class="stat-label">อัพเดท</span></div>
+          </div>
+          <button class="access-button">📋 เข้าดูข้อมูล</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- เลือกปี -->
+    <div id="yearlyView" class="view">
+      <div class="main-grid" id="yearGrid"></div>
+    </div>
+
+    <!-- เลือกเดือน -->
+    <div id="monthlyView" class="view">
+      <div class="mobile-notice">หมายเหตุ: ไฟล์รายเดือนอาจมีขนาดใหญ่ โปรดใช้ Wi-Fi ในการดาวน์โหลด</div>
+      <div class="main-grid" id="monthGrid"></div>
+    </div>
+
+    <div class="footer">
+      <p class="footer-text">⚡ Power Meter • Scrap Data • Air Compressor System © 2025 ⚡</p>
+    </div>
+  </div>
+
+  <script>
+    let currentDataType = '';
+    let currentYear     = null;
+    let navigationHistory = ['homeView'];
+
+    function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    const IDX_TO_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                       'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+    // Data: Power Meter 
+    const powerMeterData = {
+      '2025': {
+        icon: '📅', title: '2025',
+        description: 'ข้อมูล Power Meter ปี 2025<br>รวมทุกเดือนในปี', available: true,
+        months: {
+          'กรกฎาคม':  { description: 'ข้อมูลเดือนกรกฎาคม<br>พร้อมให้ดาวน์โหลด',   fileSize: '~2.5 MB', url: 'https://docs.google.com/spreadsheets/d/1AWaCQSfeHMD8RHs92xB2Yzd80e4Tznpi/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1AWaCQSfeHMD8RHs92xB2Yzd80e4Tznpi/export?format=xlsx', available: true },
+          'สิงหาคม':  { description: 'ข้อมูลเดือนสิงหาคม<br>พร้อมให้ดาวน์โหลด',   fileSize: '~2.8 MB', url: 'https://docs.google.com/spreadsheets/d/1hjCWANmybYZ2wK8iVuhkjtzkadxG2bS1/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1hjCWANmybYZ2wK8iVuhkjtzkadxG2bS1/export?format=xlsx', available: true },
+          'กันยายน':  { description: 'ข้อมูลเดือนกันยายน<br>พร้อมให้ดาวน์โหลด',   fileSize: '~3.0 MB', url: 'https://docs.google.com/spreadsheets/d/18wiVtVuzcxFHqubTRxNFJGiPhIoRik2l/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/18wiVtVuzcxFHqubTRxNFJGiPhIoRik2l/export?format=xlsx', available: true },
+          'ตุลาคม':   { description: 'ข้อมูลเดือนตุลาคม<br>พร้อมให้ดาวน์โหลด',    fileSize: '~2.7 MB', url: 'https://docs.google.com/spreadsheets/d/1hdExwUgQI_CMWUnJahoVqYMYRx28qMAS/edit?usp=sharing&ouid=109062324482265916071&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1hdExwUgQI_CMWUnJahoVqYMYRx28qMAS/export?format=xlsx', available: true },
+          'พฤศจิกายน':{ description: 'ข้อมูลเดือนพฤศจิกายน<br>พร้อมให้ดาวน์โหลด', fileSize: '~2.9 MB', url: 'https://docs.google.com/spreadsheets/d/1lBOHUdxLLj25cVCb3yPwys7ZCGBk18V-/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1lBOHUdxLLj25cVCb3yPwys7ZCGBk18V-/export?format=xlsx', available: true },
+          'ธันวาคม':  { description: 'ข้อมูลเดือนธันวาคม<br>พร้อมให้ดาวน์โหลด',   fileSize: '~3.2 MB', url: 'https://docs.google.com/spreadsheets/d/141P_c9b1Ed8ut1C5WpvKA3B9TpicPniY/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/141P_c9b1Ed8ut1C5WpvKA3B9TpicPniY/export?format=xlsx', available: true }
+        }
+      },
+      '2026': {
+        icon: '📅', title: '2026',
+        description: 'ข้อมูล Power Meter ปี 2026<br>พร้อมให้ดาวน์โหลด', available: true,
+        months: {
+          'มกราคม':    { description: 'ข้อมูลเดือนมกราคม<br>พร้อมให้ดาวน์โหลด',    fileSize: '~2.5 MB', url: 'https://docs.google.com/spreadsheets/d/1K-LhquT_dPktlOUhEOF8kYtinRmd3lZy/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1K-LhquT_dPktlOUhEOF8kYtinRmd3lZy/export?format=xlsx', available: true },
+          'กุมภาพันธ์':{ description: 'ข้อมูลเดือนกุมภาพันธ์<br>พร้อมให้ดาวน์โหลด', fileSize: '~2.3 MB', url: 'https://docs.google.com/spreadsheets/d/1_cj79Q13rt22TuEXv6ZDey4JwDCGQjkj/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1K-LhquT_dPktlOUhEOF8kYtinRmd3lZy/export?format=xlsx', available: true },
+          'มีนาคม':    { 
+            description: 'ข้อมูลเดือนมีนาคม<br>พร้อมให้ดาวน์โหลด',    
+            fileSize: '~2.6 MB', 
+            url: 'https://docs.google.com/spreadsheets/d/1Qn55VCVpP3B-ffDUJf_zieCsbANF5VRL/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', 
+            exportUrl: 'https://docs.google.com/spreadsheets/d/1Qn55VCVpP3B-ffDUJf_zieCsbANF5VRL/export?format=xlsx', 
+            available: true },
+          'เมษายน':    { description: 'ข้อมูลเดือนเมษายน<br>กำลังเตรียมข้อมูล',    fileSize: '~2.7 MB', url: '', exportUrl: '', available: false },
+          'พฤษภาคม':  { description: 'ข้อมูลเดือนพฤษภาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.8 MB', url: '', exportUrl: '', available: false },
+          'มิถุนายน':  { description: 'ข้อมูลเดือนมิถุนายน<br>กำลังเตรียมข้อมูล',  fileSize: '~2.9 MB', url: '', exportUrl: '', available: false },
+          'กรกฎาคม':  { description: 'ข้อมูลเดือนกรกฎาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.5 MB', url: '', exportUrl: '', available: false },
+          'สิงหาคม':  { description: 'ข้อมูลเดือนสิงหาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.8 MB', url: '', exportUrl: '', available: false },
+          'กันยายน':  { description: 'ข้อมูลเดือนกันยายน<br>กำลังเตรียมข้อมูล',  fileSize: '~3.0 MB', url: '', exportUrl: '', available: false },
+          'ตุลาคม':   { description: 'ข้อมูลเดือนตุลาคม<br>กำลังเตรียมข้อมูล',   fileSize: '~2.7 MB', url: '', exportUrl: '', available: false },
+          'พฤศจิกายน':{ description: 'ข้อมูลเดือนพฤศจิกายน<br>กำลังเตรียมข้อมูล',fileSize: '~2.9 MB', url: '', exportUrl: '', available: false },
+          'ธันวาคม':  { description: 'ข้อมูลเดือนธันวาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~3.2 MB', url: '', exportUrl: '', available: false }
+        }
+      },
+      '2027': {
+        icon: '📅', title: '2027',
+        description: 'ข้อมูล Power Meter ปี 2027<br>กำลังเตรียมข้อมูล', available: false, months: {}
+      }
+    };
+
+    // Data: Scrap 
+    const scrapData = {
+      '2025': {
+        icon: '♻️', title: '2025',
+        description: 'ข้อมูล Scrap ปี 2025<br>รวมข้อมูลการรีไซเคิล', available: true,
+        months: {
+          'กันยายน':   { description: 'ข้อมูล Scrap เดือนกันยายน<br>พร้อมให้ดาวน์โหลด',   fileSize: '~1.9 MB', url: 'https://docs.google.com/spreadsheets/d/1mL_yB-t6TXwW1ckdm4XbqyjvFpUo1Fq3/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1mL_yB-t6TXwW1ckdm4XbqyjvFpUo1Fq3/export?format=xlsx', available: true },
+          'ตุลาคม':    { description: 'ข้อมูล Scrap เดือนตุลาคม<br>พร้อมให้ดาวน์โหลด',    fileSize: '~2.0 MB', url: 'https://docs.google.com/spreadsheets/d/1oldYP1WJ2rzWUK7pQQJ2wie05c37nTq5/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1oldYP1WJ2rzWUK7pQQJ2wie05c37nTq5/export?format=xlsx', available: true },
+          'พฤศจิกายน': { description: 'ข้อมูล Scrap เดือนพฤศจิกายน<br>พร้อมให้ดาวน์โหลด', fileSize: '~1.8 MB', url: 'https://docs.google.com/spreadsheets/d/190eiTm20yb48reEeXuui17ntvL3zg5fb/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/190eiTm20yb48reEeXuui17ntvL3zg5fb/export?format=xlsx', available: true },
+          'ธันวาคม':   { description: 'ข้อมูล Scrap เดือนธันวาคม<br>พร้อมให้ดาวน์โหลด',   fileSize: '~2.1 MB', url: 'https://docs.google.com/spreadsheets/d/1XrYpl1xbxRNnRizs4y0npXJ0gWng-fYu/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1XrYpl1xbxRNnRizs4y0npXJ0gWng-fYu/export?format=xlsx', available: true }
+        }
+      },
+      '2026': {
+        icon: '♻️', title: '2026',
+        description: 'ข้อมูล Scrap ปี 2026<br>พร้อมให้ดาวน์โหลด', available: true,
+        months: {
+          'มกราคม':    { description: 'ข้อมูล Scrap เดือนมกราคม<br>พร้อมให้ดาวน์โหลด',    fileSize: '~1.8 MB', url: 'https://docs.google.com/spreadsheets/d/16E9LrUNG72WoSsL03QRq4VOBEEJRvFEj/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/16E9LrUNG72WoSsL03QRq4VOBEEJRvFEj/export?format=xlsx', available: true },
+          'กุมภาพันธ์':{ description: 'ข้อมูล Scrap เดือนกุมภาพันธ์<br>พร้อมให้ดาวน์โหลด', fileSize: '~1.6 MB', url: 'https://docs.google.com/spreadsheets/d/1pfkmIUEVf5iIazus0-Ncm_OB1N6WXlO4/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1pfkmIUEVf5iIazus0-Ncm_OB1N6WXlO4/export?format=xlsx', available: true },
+          'มีนาคม':    { description: 'ข้อมูล Scrap เดือนมีนาคม<br>พร้อมให้ดาวน์โหลด',    fileSize: '~1.9 MB', url: 'https://docs.google.com/spreadsheets/d/18QRV_zCGp3ICrqO8_0ge1q_0jWmPKlxk/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/18QRV_zCGp3ICrqO8_0ge1q_0jWmPKlxk/export?format=xlsx', available: true },
+          'เมษายน':    { description: 'ข้อมูล Scrap เดือนเมษายน<br>กำลังเตรียมข้อมูล',    fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'พฤษภาคม':  { description: 'ข้อมูล Scrap เดือนพฤษภาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~1.7 MB', url: '', exportUrl: '', available: false },
+          'มิถุนายน':  { description: 'ข้อมูล Scrap เดือนมิถุนายน<br>กำลังเตรียมข้อมูล',  fileSize: '~1.9 MB', url: '', exportUrl: '', available: false },
+          'กรกฎาคม':  { description: 'ข้อมูล Scrap เดือนกรกฎาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~1.8 MB', url: '', exportUrl: '', available: false },
+          'สิงหาคม':  { description: 'ข้อมูล Scrap เดือนสิงหาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'กันยายน':  { description: 'ข้อมูล Scrap เดือนกันยายน<br>กำลังเตรียมข้อมูล',  fileSize: '~1.9 MB', url: '', exportUrl: '', available: false },
+          'ตุลาคม':   { description: 'ข้อมูล Scrap เดือนตุลาคม<br>กำลังเตรียมข้อมูล',   fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'พฤศจิกายน':{ description: 'ข้อมูล Scrap เดือนพฤศจิกายน<br>กำลังเตรียมข้อมูล',fileSize: '~1.8 MB', url: '', exportUrl: '', available: false },
+          'ธันวาคม':  { description: 'ข้อมูล Scrap เดือนธันวาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.1 MB', url: '', exportUrl: '', available: false }
+        }
+      },
+      '2027': {
+        icon: '♻️', title: '2027',
+        description: 'ข้อมูล Scrap ปี 2027<br>กำลังเตรียมข้อมูล', available: false, months: {}
+      }
+    };
+
+    //Data: Air Compressor 
+    const airCompData = {
+      '2025': {
+        icon: '💨', title: '2025',
+        description: 'ข้อมูล Air Compressor ปี 2025<br>รวมข้อมูล Flow & Pressure', available: true,
+        months: {
+          'กรกฎาคม':  { description: 'ข้อมูลเดือนกรกฎาคม<br>พร้อมให้ดาวน์โหลด',  fileSize: '~2.1 MB', url: 'https://docs.google.com/spreadsheets/d/15dJC9rK9SEqsLEqNXBoi-IroPv8-i43J/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/15dJC9rK9SEqsLEqNXBoi-IroPv8-i43J/export?format=xlsx', available: true },
+          'สิงหาคม':  { description: 'ข้อมูลเดือนสิงหาคม<br>พร้อมให้ดาวน์โหลด',  fileSize: '~2.0 MB', url: 'https://docs.google.com/spreadsheets/d/1M1GoQJ2mJ6-PlK01dcHNRZjFdK83M70m/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1M1GoQJ2mJ6-PlK01dcHNRZjFdK83M70m/export?format=xlsx', available: true },
+          'กันยายน':  { description: 'ข้อมูลเดือนกันยายน<br>พร้อมให้ดาวน์โหลด',  fileSize: '~1.9 MB', url: 'https://docs.google.com/spreadsheets/d/1EDpHkkY3-HTbVJZCmp88AthyNUP5pPLI/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1EDpHkkY3-HTbVJZCmp88AthyNUP5pPLI/export?format=xlsx', available: true },
+          'ตุลาคม':   { description: 'ข้อมูลเดือนตุลาคม<br>พร้อมให้ดาวน์โหลด',   fileSize: '~2.0 MB', url: 'https://docs.google.com/spreadsheets/d/1gKcIjsIUZANTrOkgTHPl3WourZan-kDg/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1gKcIjsIUZANTrOkgTHPl3WourZan-kDg/export?format=xlsx', available: true },
+          'พฤศจิกายน':{ description: 'ข้อมูลเดือนพฤศจิกายน<br>พร้อมให้ดาวน์โหลด', fileSize: '~2.0 MB', url: 'https://docs.google.com/spreadsheets/d/1k2j5Fwm2TXkVQ0iQpRYqHI59vDx03AI9/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1k2j5Fwm2TXkVQ0iQpRYqHI59vDx03AI9/export?format=xlsx', available: true },
+          'ธันวาคม':  { description: 'ข้อมูลเดือนธันวาคม<br>พร้อมให้ดาวน์โหลด',  fileSize: '~2.1 MB', url: 'https://docs.google.com/spreadsheets/d/16gk51Yj4wq3JD-rTOulxEPYjCO9zHcHa/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/16gk51Yj4wq3JD-rTOulxEPYjCO9zHcHa/export?format=xlsx', available: true }
+        }
+      },
+      '2026': {
+        icon: '💨', title: '2026',
+        description: 'ข้อมูล Air Compressor ปี 2026<br>พร้อมให้ดาวน์โหลด', available: true,
+        months: {
+          'มกราคม':    { description: 'ข้อมูลเดือนมกราคม<br>พร้อมให้ดาวน์โหลด',    fileSize: '~1.8 MB', url: 'https://docs.google.com/spreadsheets/d/1tF38Sqks1oFIV1CUN48q4oR_2bTKGvTU/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1tF38Sqks1oFIV1CUN48q4oR_2bTKGvTU/export?format=xlsx', available: true },
+          'กุมภาพันธ์':{ description: 'ข้อมูล Air เดือนกุมภาพันธ์<br>พร้อมให้ดาวน์โหลด', fileSize: '~1.7 MB', url: 'https://docs.google.com/spreadsheets/d/1eZg5d2SG0v_BSutluFCBlZ4FnuESnp6R/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1eZg5d2SG0v_BSutluFCBlZ4FnuESnp6R/export?format=xlsx', available: true },
+          'มีนาคม':    { description: 'ข้อมูล Air เดือนมีนาคม<br>พร้อมให้ดาวน์โหลด',    fileSize: '~1.9 MB', url: 'https://docs.google.com/spreadsheets/d/1m-C8zwlK9sKjZtm5bgh7Wzf7H0D0xX88/edit?usp=sharing&ouid=103243829117381280273&rtpof=true&sd=true', exportUrl: 'https://docs.google.com/spreadsheets/d/1m-C8zwlK9sKjZtm5bgh7Wzf7H0D0xX88/export?format=xlsx', available: true },
+          'เมษายน':    { description: 'ข้อมูล Air เดือนเมษายน<br>กำลังเตรียมข้อมูล',    fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'พฤษภาคม':  { description: 'ข้อมูล Air เดือนพฤษภาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~1.9 MB', url: '', exportUrl: '', available: false },
+          'มิถุนายน':  { description: 'ข้อมูล Air เดือนมิถุนายน<br>กำลังเตรียมข้อมูล',  fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'กรกฎาคม':  { description: 'ข้อมูล Air เดือนกรกฎาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.1 MB', url: '', exportUrl: '', available: false },
+          'สิงหาคม':  { description: 'ข้อมูล Air เดือนสิงหาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'กันยายน':  { description: 'ข้อมูล Air เดือนกันยายน<br>กำลังเตรียมข้อมูล',  fileSize: '~1.9 MB', url: '', exportUrl: '', available: false },
+          'ตุลาคม':   { description: 'ข้อมูล Air เดือนตุลาคม<br>กำลังเตรียมข้อมูล',   fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'พฤศจิกายน':{ description: 'ข้อมูล Air เดือนพฤศจิกายน<br>กำลังเตรียมข้อมูล',fileSize: '~2.0 MB', url: '', exportUrl: '', available: false },
+          'ธันวาคม':  { description: 'ข้อมูล Air เดือนธันวาคม<br>กำลังเตรียมข้อมูล',  fileSize: '~2.1 MB', url: '', exportUrl: '', available: false }
+        }
+      },
+      '2027': {
+        icon: '💨', title: '2027',
+        description: 'ข้อมูล Air Compressor ปี 2027<br>กำลังเตรียมข้อมูล', available: false, months: {}
+      }
+    };
+
+    //Auto-enable current month 
+    function autoEnableCurrentMonth() {
+      const now  = new Date();
+      const y    = String(now.getFullYear());
+      const name = IDX_TO_TH[now.getMonth()];
+
+      [powerMeterData, scrapData, airCompData].forEach(dataset => {
+        if (!dataset[y]) return;
+        dataset[y].available = true;
+
+        const m = dataset[y].months[name];
+        if (!m) return;
+        if (!m.url) { m.url = '#'; m.exportUrl = '#'; }
+        m.available    = true;
+        m.description  = m.description.replace('กำลังเตรียมข้อมูล', 'พร้อมให้ดาวน์โหลด');
+      });
+    }
+
+    // Routing helpers 
+    function getCurrentData() {
+      if (currentDataType === 'scrap')         return scrapData;
+      if (currentDataType === 'aircompressor') return airCompData;
+      return powerMeterData;
+    }
+
+    function navigateTo(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      navigationHistory.push(viewId);
+      updateBreadcrumb(viewId);
+    }
+
+    function goBack() {
+      if (navigationHistory.length > 1) {
+        navigationHistory.pop();
+        const prev = navigationHistory[navigationHistory.length - 1];
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(prev).classList.add('active');
+        updateBreadcrumb(prev);
+      }
+    }
+
+    function updateBreadcrumb(currentView) {
+      const backButton = document.getElementById('backButton');
+      const homeNav    = document.getElementById('homeNav');
+      const yearNav    = document.getElementById('yearNav');
+      const monthNav   = document.getElementById('monthNav');
+      const sep1       = document.getElementById('sep1');
+      const sep2       = document.getElementById('sep2');
+
+      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+
+      if (currentView === 'homeView') {
+        backButton.style.display = 'none';
+        homeNav.classList.add('active');
+        yearNav.style.display  = 'none';
+        monthNav.style.display = 'none';
+        sep1.style.display     = 'none';
+        sep2.style.display     = 'none';
+      } else if (currentView === 'yearlyView') {
+        backButton.style.display = 'inline-block';
+        yearNav.style.display    = 'inline-block';
+        yearNav.classList.add('active');
+        monthNav.style.display   = 'none';
+        sep1.style.display       = 'inline';
+        sep2.style.display       = 'none';
+      } else if (currentView === 'monthlyView') {
+        backButton.style.display = 'inline-block';
+        yearNav.style.display    = 'inline-block';
+        monthNav.style.display   = 'inline-block';
+        monthNav.classList.add('active');
+        sep1.style.display       = 'inline';
+        sep2.style.display       = 'inline';
+      }
+    }
+
+    function selectDataType(type) {
+      currentDataType = type;
+      const labels = {
+        powermeter:     ['ดาวน์โหลดข้อมูล POWER METER',     'DATA ONLINE'],
+        scrap:          ['ดาวน์โหลดข้อมูล SCRAP DATA',       'SCRAP ONLINE'],
+        aircompressor:  ['ดาวน์โหลดข้อมูล AIR COMPRESSOR',   'AIR SYSTEM ONLINE']
+      };
+      document.getElementById('mainSubtitle').textContent = labels[type][0];
+      document.getElementById('statusText').textContent   = labels[type][1];
+      navigateTo('yearlyView');
+      generateYearCards();
+    }
+
+    // Card generators
+    function generateYearCards() {
+      const grid = document.getElementById('yearGrid');
+      grid.innerHTML = '';
+      Object.entries(getCurrentData()).forEach(([year, info]) => {
+        const ready = Object.values(info.months).filter(m => m.available).length;
+        const total = Object.keys(info.months).length;
+        const card  = document.createElement('div');
+        card.className = `year-card ${!info.available ? 'unavailable' : ''}`;
+        card.onclick   = () => showMonthView(year);
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-icon">${info.icon}</div>
+            <h2 class="card-title">${info.title}</h2>
+          </div>
+          <p class="card-description">${info.description}</p>
+          <div class="card-stats">
+            <div class="stat-item"><span class="stat-number">${ready}</span><span class="stat-label">พร้อม</span></div>
+            <div class="stat-item"><span class="stat-number">${total - ready}</span><span class="stat-label">รอ</span></div>
+            <div class="stat-item"><span class="stat-number">${total}</span><span class="stat-label">รวม</span></div>
+          </div>
+          ${info.available
+            ? '<div class="file-size">📁 คลิกเพื่อดูรายเดือน</div>'
+            : '<div class="coming-soon">เร็วๆ นี้</div>'}
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function generateMonthCards(year) {
+      const grid     = document.getElementById('monthGrid');
+      grid.innerHTML = '';
+      const yearInfo = getCurrentData()[year];
+      if (!yearInfo) return;
+
+      Object.entries(yearInfo.months).forEach(([month, data]) => {
+        const disabled = !data.available || !data.url;
+        const card     = document.createElement('div');
+        card.className = `month-card ${!data.available ? 'unavailable' : ''}`;
+        card.innerHTML = `
+          <div class="card-header">
+            <h2 class="card-title">${month}<br>${year}</h2>
+          </div>
+          <p class="card-description">${data.description}</p>
+          ${data.available && isMobile()
+            ? '<div class="mobile-notice">📱 มือถือ: กดเพื่อเปิดใน Google Sheets</div>'
+            : ''}
+          <button class="download-button ${disabled ? 'unavailable' : ''}"
+                  ${disabled ? 'disabled' : ''}
+                  onclick="downloadFile(event,'${year}','${month}')">
+            <span>${!disabled ? '📥 ดาวน์โหลดไฟล์' : '⏳ ยังไม่พร้อม'}</span>
+          </button>
+          ${data.available
+            ? `<div class="file-size">ขนาดไฟล์: ${data.fileSize}</div>`
+            : '<div class="coming-soon">เร็วๆ นี้</div>'}
+          <div class="progress-container" id="progress-${year}-${month}">
+            <div class="progress-bar"></div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function showMonthView(year) {
+      const data = getCurrentData();
+      if (!data[year]?.available) return;
+      currentYear = year;
+      navigateTo('monthlyView');
+      generateMonthCards(year);
+    }
+
+    // Download
+    function downloadFile(ev, year, month) {
+      const monthData = getCurrentData()[year]?.months[month];
+      if (!monthData?.available || !monthData.url) return;
+
+      const mobile    = isMobile();
+      const targetUrl = mobile && monthData.exportUrl ? monthData.exportUrl : monthData.url;
+      let newTab      = null;
+
+      if (mobile && targetUrl !== '#') {
+        newTab = window.open('about:blank', '_blank');
+        if (!newTab) { window.location.href = targetUrl; return; }
+      }
+
+      const container = document.getElementById(`progress-${year}-${month}`);
+      const bar       = container.querySelector('.progress-bar');
+      container.style.display = 'block';
+
+      if (ev?.target) {
+        ev.target.style.transform = 'translateY(-2px) scale(0.95)';
+        setTimeout(() => { ev.target.style.transform = ''; }, 200);
+      }
+
+      let progress = 0;
+      const ticker = setInterval(() => {
+        progress += Math.random() * 20;
+        if (progress > 100) progress = 100;
+        bar.style.width = progress + '%';
+
+        if (progress >= 100) {
+          clearInterval(ticker);
+          if (targetUrl === '#') {
+            alert(`✅ ดาวน์โหลดข้อมูลเสร็จสิ้น`);
+          } else if (mobile && newTab) {
+            newTab.location.href = targetUrl;
+          } else {
+            const a = document.createElement('a');
+            a.href = targetUrl; a.target = '_blank'; a.rel = 'noopener noreferrer';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          }
+          setTimeout(() => { container.style.display = 'none'; bar.style.width = '0%'; }, 1200);
+        }
+      }, 80);
+    }
+
+    // Particles
+    function createParticle() {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left            = Math.random() * 100 + '%';
+      p.style.top             = Math.random() * 100 + '%';
+      p.style.animationDelay  = Math.random() * 8 + 's';
+      document.getElementById('particleContainer').appendChild(p);
+      setTimeout(() => p.remove(), 8000);
+    }
+
+    // Init 
+    document.addEventListener('DOMContentLoaded', () => {
+      autoEnableCurrentMonth();
+      for (let i = 0; i < 6; i++) createParticle();
+      setInterval(createParticle, 2000);
+    });
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') goBack(); });
+  </script>
+</body>
+</html>
